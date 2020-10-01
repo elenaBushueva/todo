@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from 'react';
+import Todo from './Todo';
+import TodoController from "./TodoController";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default function App() {
+    const initState = [
+        {id: 1, title: 'First', description: 'Learn HTML'},
+        {id: 2, title: 'Second', description: 'Learn CSS'},
+        {id: 3, title: 'Third', description: 'Learn JS'},
+        {id: 4, title: 'Forth', description: 'Learn React'},
+    ]
+    const [todos, setTodos] = useState(initState);
+
+    const deleteTodo = (id) => {
+        const newList = todos.filter(el => el.id !== id);
+        setTodos(newList);
+    }
+
+    const moveTodo = (currentIndex, nextIndex) => {
+        const newList = [...todos];
+
+        const currentElem = newList[currentIndex];
+        newList[currentIndex] = newList[nextIndex];
+        newList[nextIndex] = currentElem;
+
+        setTodos(newList);
+    }
+
+    const addTodo = (newTitle, newDescription) => {
+        const newTodo = {
+            id: Math.random(),
+            title: newTitle,
+            description: newDescription,
+        }
+        const newList = [...todos, newTodo];
+        setTodos(newList);
+    }
+
+    const editTodo = (newTitle, id) => {
+        const newList = todos.map(el => {
+            if (el.id === id) return {el, title: newTitle}
+
+            return el
+        })
+        setTodos(newList);
+    }
+    return (
+        <div>
+            <TodoController addTodo={addTodo}/>
+
+            {todos.map((el, index) => <Todo
+                key={el.id}
+                todo={el}
+                deleteTodo={deleteTodo}
+                moveTodo={moveTodo}
+                index={index}
+                isLast={index === todos.length - 1}
+                editTodo={editTodo}/>
+            )}
+        </div>
+    );
 }
-
-export default App;
