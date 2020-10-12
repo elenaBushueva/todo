@@ -37,12 +37,11 @@ export default function App() {
     }
 
     const editTodo = (newTitle, id) => {
-        const newList = todos.map(el => {
-            if (el.id === id) return {el, title: newTitle}
-
+        const newTodos = todos.map(el => {
+            if (el.id === id) return {...el, title: newTitle}
             return el
         })
-        setTodos(newList);
+        setTodos(newTodos);
     }
     return (
         <div>
